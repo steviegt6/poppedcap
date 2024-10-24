@@ -23,6 +23,6 @@ public class ListGamesCommand : ICommand
             AnsiConsole.MarkupLine($"• [aqua bold]{FormattingHelpers.PadGameName(game, withAliases: IncludeAliases)}[/] [grey italic]({game.GameUrl})[/]");
         }
 
-        return default;
+        return default(ValueTask);
     }
 }

@@ -21,6 +21,8 @@ internal static class FormattingHelpers
             return WellKnownPopCapGames.ALL_GAMES.Select(x => x.GameName.Length + GetAliasText(x).Length).Prepend(0).Max();
         }
     );
+    
+    public static int MaxGameNameLength => max_game_name_length.Value;
 
     /// <summary>
     ///     Pads a game name to normalize it when displaying alongside all other
