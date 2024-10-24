@@ -45,7 +45,7 @@ public class CheckStatusCommand : ICommand
         await AnsiConsole.Progress()
                          .AutoClear(false)
                          .HideCompleted(false)
-                         .Columns(new TaskDescriptionColumn { Alignment = Justify.Left }, new ProgressBarColumn(), new SpinnerColumn())
+                         .Columns(new TaskDescriptionColumn(), new ProgressBarColumn(), new SpinnerColumn())
                          .StartAsync(
                               async x =>
                               {
