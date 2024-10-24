@@ -17,10 +17,6 @@ namespace Tomat.PoppedCap.CLI.Commands;
 [Command("check-status", Description = "Checks the status of game setups online")]
 public class CheckStatusCommand : ICommand
 {
-    private const string result_description = "[grey]Checking[/] {0}[grey]...[/]";
-    private const string result_success     = "[green]✅[/]";
-    private const string result_failure     = "[red]❌[/] [grey]({0})[/]";
-
     [CommandParameter(0, Description = "The name of the game (full or alias) or \"all\"")]
     public string GameName { get; set; } = string.Empty;
 
@@ -55,13 +51,13 @@ public class CheckStatusCommand : ICommand
                               {
                                   foreach (var game in games)
                                   {
-                                      var task = x.AddTask(GetPaddedDescription(game.GameName, null));
+                                      var task = x.AddTask(GetDescription(game.GameName, null));
                                       task.IsIndeterminate = true;
 
                                       var (success, status) = await CheckGameStatus(game);
                                       task.IsIndeterminate  = false;
                                       task.Value            = 100;
-                                      task.Description      = GetPaddedDescription(game.GameName, (success, (int)status));
+                                      task.Description      = GetDescription(game.GameName, (success, (int)status));
                                   }
                               }
                           );
@@ -75,15 +71,16 @@ public class CheckStatusCommand : ICommand
         return (response.IsSuccessStatusCode, response.StatusCode);
     }
 
-    private static string GetPaddedDescription(string gameName, (bool success, int status)? result)
+    private static string GetDescription(string gameName, (bool success, int status)? result)
     {
-        var description = string.Format(result_description, gameName);
-        if (result is not null)
+        var description = $"[grey]Checking[/] {gameName}[grey]...[/]";
+        if (result is null)
         {
-            description += " ";
-            description += result.Value.success ? result_success : string.Format(result_failure, result.Value.status.ToString("D3"));
+            return description;
         }
 
-        return description.PadRight(FormattingHelpers.MaxGameNameLength + (result_description.Length - 3) + 1 + string.Format(result_failure, "000").Length);
+        description += " ";
+        description += result.Value.success ? "[green]✅[/]" : $"[red]❌[/] [grey]({result.Value.status:D3})[/]";
+        return description;
     }
 }
