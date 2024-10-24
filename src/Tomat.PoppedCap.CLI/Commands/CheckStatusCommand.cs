@@ -66,8 +66,9 @@ public class CheckStatusCommand : ICommand
     private static async Task<(bool success, HttpStatusCode status)> CheckGameStatus(PopCapGame game)
     {
         // TODO: Move HttpClient out... general utilities...
-        var client   = new HttpClient();
-        var response = await client.GetAsync(game.GameUrl);
+        var client  = new HttpClient();
+        var request = new HttpRequestMessage(HttpMethod.Head, game.GameUrl);
+        var response = await client.SendAsync(request);
         return (response.IsSuccessStatusCode, response.StatusCode);
     }
 
