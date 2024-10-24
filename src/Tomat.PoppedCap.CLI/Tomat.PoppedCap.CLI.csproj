@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Commands\"/>
+        <ProjectReference Include="..\Tomat.PoppedCap\Tomat.PoppedCap.csproj"/>
     </ItemGroup>
 
 </Project>
