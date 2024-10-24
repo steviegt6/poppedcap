@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -49,16 +50,27 @@ public class CheckStatusCommand : ICommand
                          .StartAsync(
                               async x =>
                               {
+                                  var tasks = new List<Task>();
+
                                   foreach (var game in games)
                                   {
                                       var task = x.AddTask(GetDescription(game.GameName, null));
                                       task.IsIndeterminate = true;
 
-                                      var (success, status) = await CheckGameStatus(game);
-                                      task.IsIndeterminate  = false;
-                                      task.Value            = 100;
-                                      task.Description      = GetDescription(game.GameName, (success, (int)status));
+                                      tasks.Add(
+                                          Task.Run(
+                                              async () =>
+                                              {
+                                                  var (success, status) = await CheckGameStatus(game);
+                                                  task.IsIndeterminate  = false;
+                                                  task.Value            = 100;
+                                                  task.Description      = GetDescription(game.GameName, (success, (int)status));
+                                              }
+                                          )
+                                      );
                                   }
+
+                                  await Task.WhenAll(tasks);
                               }
                           );
     }
@@ -66,8 +78,8 @@ public class CheckStatusCommand : ICommand
     private static async Task<(bool success, HttpStatusCode status)> CheckGameStatus(PopCapGame game)
     {
         // TODO: Move HttpClient out... general utilities...
-        var client  = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Head, game.GameUrl);
+        var client   = new HttpClient();
+        var request  = new HttpRequestMessage(HttpMethod.Head, game.GameUrl);
         var response = await client.SendAsync(request);
         return (response.IsSuccessStatusCode, response.StatusCode);
     }
