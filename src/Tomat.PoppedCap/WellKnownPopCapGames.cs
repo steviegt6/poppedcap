@@ -81,7 +81,7 @@ public static class WellKnownPopCapGames
 
     private static string MakeGameUrl(string setupName)
     {
-        return $"http://static-www.ec.popcap.com/binaries/popcap_downloads/{setupName}.exe";
+        return $"https://static-www.ec.popcap.com/binaries/popcap_downloads/{setupName}.exe";
     }
 
     private static string InferSetupName(string gameName)
