@@ -5,38 +5,38 @@ namespace Tomat.PoppedCap;
 /// </summary>
 public static class WellKnownPopCapGames
 {
-    private static readonly PopCapGame alchemy                         = MakeGame("Alchemy",                          "AlchemySetup");
-    private static readonly PopCapGame astro_pop                       = MakeGame("Astro Pop",                        "AstroPopSetup");
-    private static readonly PopCapGame atomica                         = MakeGame("Atomica",                          "AtomicaSetup");
-    private static readonly PopCapGame banana_bugs                     = MakeGame("Banana Bugs",                      "BananaBugsSetup");
-    private static readonly PopCapGame bejeweled                       = MakeGame("Bejeweled",                        "BejeweledSetup");
-    private static readonly PopCapGame bejeweled_2                     = MakeGame("Bejeweled 2",                      "Bejeweled2Setup");
-    private static readonly PopCapGame bejeweled_3                     = MakeGame("Bejeweled 3",                      "Bejeweled3Setup");
-    private static readonly PopCapGame bejeweled_twist                 = MakeGame("Bejeweled Twist",                  "BejeweledTwistSetup");
-    private static readonly PopCapGame big_money                       = MakeGame("Big Money",                        "BigMoneySetup");
-    private static readonly PopCapGame bonnies_bookstore               = MakeGame("Bonnie's Bookstore",               "BonniesBookstoreSetup");
-    private static readonly PopCapGame bookworm                        = MakeGame("Bookworm",                         "BookwormSetup");
-    private static readonly PopCapGame bookworm_adventures             = MakeGame("Bookworm Adventures",              "BWASetup");
-    private static readonly PopCapGame bookworm_adventures_volume_2    = MakeGame("Bookworm Adventures Volume 2",     "BWAVol2Setup");
-    private static readonly PopCapGame chuzzle                         = MakeGame("Chuzzle",                          "ChuzzleSetup");
-    private static readonly PopCapGame dynomite                        = MakeGame("Dynomite",                         "DynomiteSetup");
-    private static readonly PopCapGame feeding_frenzy                  = MakeGame("Feeding Frenzy",                   "FeedingFrenzySetup");
-    private static readonly PopCapGame hammer_heads                    = MakeGame("Hammer Heads",                     "HammerHeadsSetup");
-    private static readonly PopCapGame insaniquarium                   = MakeGame("Insaniquarium",                    "InsaniquariumSetup");
-    private static readonly PopCapGame noahs_ark                       = MakeGame("Noah's Ark",                       "NoahsArkSetup");
-    private static readonly PopCapGame peggle                          = MakeGame("Peggle",                           "PeggleSetup");
-    private static readonly PopCapGame peggle_nights                   = MakeGame("Peggle Nights",                    "PeggleNightsSetup");
-    private static readonly PopCapGame pixelus                         = MakeGame("Pixelus",                          "PixelusSetup");
-    private static readonly PopCapGame plants_vs_zombies               = MakeGame("Plants Vs. Zombies",               "PlantsVsZombiesSetup");
-    private static readonly PopCapGame talismania                      = MakeGame("Talismania",                       "TalismaniaSetup");
-    private static readonly PopCapGame tip_top                         = MakeGame("Tip Top",                          "TipTopSetup");
-    private static readonly PopCapGame typer_shark                     = MakeGame("Typer Shark",                      "TyperSharkSetup");
+    private static readonly PopCapGame alchemy                         = MakeGame("Alchemy");
+    private static readonly PopCapGame astro_pop                       = MakeGame("Astro Pop");
+    private static readonly PopCapGame atomica                         = MakeGame("Atomica");
+    private static readonly PopCapGame banana_bugs                     = MakeGame("Banana Bugs");
+    private static readonly PopCapGame bejeweled                       = MakeGame("Bejeweled");
+    private static readonly PopCapGame bejeweled_2                     = MakeGame("Bejeweled 2");
+    private static readonly PopCapGame bejeweled_3                     = MakeGame("Bejeweled 3");
+    private static readonly PopCapGame bejeweled_twist                 = MakeGame("Bejeweled Twist");
+    private static readonly PopCapGame big_money                       = MakeGame("Big Money");
+    private static readonly PopCapGame bonnies_bookstore               = MakeGame("Bonnie's Bookstore");
+    private static readonly PopCapGame bookworm                        = MakeGame("Bookworm");
+    private static readonly PopCapGame bookworm_adventures             = MakeGame("Bookworm Adventures",          "BWASetup");
+    private static readonly PopCapGame bookworm_adventures_volume_2    = MakeGame("Bookworm Adventures Volume 2", "BWAVol2Setup");
+    private static readonly PopCapGame chuzzle                         = MakeGame("Chuzzle");
+    private static readonly PopCapGame dynomite                        = MakeGame("Dynomite");
+    private static readonly PopCapGame feeding_frenzy                  = MakeGame("Feeding Frenzy");
+    private static readonly PopCapGame hammer_heads                    = MakeGame("Hammer Heads");
+    private static readonly PopCapGame insaniquarium                   = MakeGame("Insaniquarium");
+    private static readonly PopCapGame noahs_ark                       = MakeGame("Noah's Ark");
+    private static readonly PopCapGame peggle                          = MakeGame("Peggle");
+    private static readonly PopCapGame peggle_nights                   = MakeGame("Peggle Nights");
+    private static readonly PopCapGame pixelus                         = MakeGame("Pixelus");
+    private static readonly PopCapGame plants_vs_zombies               = MakeGame("Plants Vs. Zombies");
+    private static readonly PopCapGame talismania                      = MakeGame("Talismania");
+    private static readonly PopCapGame tip_top                         = MakeGame("Tip Top");
+    private static readonly PopCapGame typer_shark                     = MakeGame("Typer Shark");
     private static readonly PopCapGame vacation_quest_australia        = MakeGame("Vacation Quest: Australia",        "VacationQuestAustraliaSetup_20120801");
     private static readonly PopCapGame vacation_quest_hawaiian_islands = MakeGame("Vacation Quest: Hawaiian Islands", "VacationQuestHawaiiSetup");
-    private static readonly PopCapGame venice                          = MakeGame("Venice",                           "VeniceSetup");
-    private static readonly PopCapGame word_harmony                    = MakeGame("Word Harmony",                     "WordHarmonySetup");
-    private static readonly PopCapGame zuma                            = MakeGame("Zuma",                             "ZumaSetup");
-    private static readonly PopCapGame zumas_revenge                   = MakeGame("Zuma's Revenge!",                  "ZumasRevengeSetup");
+    private static readonly PopCapGame venice                          = MakeGame("Venice");
+    private static readonly PopCapGame word_harmony                    = MakeGame("Word Harmony");
+    private static readonly PopCapGame zuma                            = MakeGame("Zuma");
+    private static readonly PopCapGame zumas_revenge                   = MakeGame("Zuma's Revenge!");
 
     public static readonly PopCapGame[] ALL_GAMES =
     [
@@ -74,13 +74,23 @@ public static class WellKnownPopCapGames
         zumas_revenge,
     ];
 
-    private static PopCapGame MakeGame(string gameName, string setupName)
+    private static PopCapGame MakeGame(string gameName, string? setupName = null)
     {
-        return new PopCapGame(gameName, MakeGameUrl(setupName));
+        return new PopCapGame(gameName, MakeGameUrl(setupName ?? InferSetupName(gameName)));
     }
 
     private static string MakeGameUrl(string setupName)
     {
         return $"http://static-www.ec.popcap.com/binaries/popcap_downloads/{setupName}.exe";
+    }
+
+    private static string InferSetupName(string gameName)
+    {
+        gameName = gameName.Replace(" ", "");
+        gameName = gameName.Replace(":", "");
+        gameName = gameName.Replace("!", "");
+        gameName = gameName.Replace("'", "");
+        gameName = gameName.Replace(".", "");
+        return gameName + "Setup";
     }
 }
