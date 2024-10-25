@@ -125,7 +125,7 @@ public readonly record struct PopCapGameProcess(PopCapGame Game, string FilePath
     {
         var programData = Environment.GetEnvironmentVariable("ProgramData")!;
         var popCapGames = Path.Combine(programData, "PopCap Games");
-        var gameDir     = FindGameDir(popCapGames, Game);
+        var gameDir     = FindGameDataDir(popCapGames, Game);
         if (gameDir is null)
         {
             drmFile = null;
@@ -140,6 +140,28 @@ public readonly record struct PopCapGameProcess(PopCapGame Game, string FilePath
         }
 
         drmFile = null;
+        return false;
+    }
+
+    public bool TryGetExecutableFile([NotNullWhen(returnValue: true)] out string? executableFile)
+    {
+        var programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+        var popCapGames     = Path.Combine(programFilesX86, "PopCap Games");
+        var gameDir         = FindGameDir(popCapGames, Game);
+        if (gameDir is null)
+        {
+            executableFile = null;
+            return false;
+        }
+
+        // TODO: Maybe try harder?
+        executableFile = Path.Combine(gameDir, Game.RealName + ".exe");
+        if (File.Exists(executableFile))
+        {
+            return true;
+        }
+
+        executableFile = null;
         return false;
     }
 
@@ -158,10 +180,17 @@ public readonly record struct PopCapGameProcess(PopCapGame Game, string FilePath
         await process.WaitForExitAsync();
     }
 
-    private static string? FindGameDir(string popCapGames, PopCapGame game)
+    private static string? FindGameDataDir(string popCapGames, PopCapGame game)
     {
         // TODO: Figure out other ways to search for the directory.
         var gameDir = Path.Combine(popCapGames, game.RealName);
+        return Directory.Exists(gameDir) ? gameDir : null;
+    }
+
+    private static string? FindGameDir(string popCapGames, PopCapGame game)
+    {
+        // TODO: Figure out other ways to search for the directory.
+        var gameDir = Path.Combine(popCapGames, game.GameName);
         return Directory.Exists(gameDir) ? gameDir : null;
     }
 }

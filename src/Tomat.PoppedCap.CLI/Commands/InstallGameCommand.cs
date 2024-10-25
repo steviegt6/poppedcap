@@ -1,3 +1,4 @@
+using System.IO;
 using System.Threading.Tasks;
 
 using CliFx;
@@ -110,8 +111,36 @@ public class InstallGameCommand : ICommand
                                       return;
                                   }
 
-                                  AnsiConsole.MarkupLine($"[grey]Found DRM executable: {drmFile}![/]");
+                                  AnsiConsole.MarkupLine($"[grey]Found DRM executable:[/] [silver]{drmFile}[/]");
+
+                                  if (!process.Value.TryGetExecutableFile(out var executableFile))
+                                  {
+                                      AnsiConsole.MarkupLine($"[red]Failed to find executable file for {game.GameName}, aborting...[/]");
+                                      return;
+                                  }
+
+                                  AnsiConsole.MarkupLine($"[grey]Found executable:[/] [silver]{executableFile}[/]");
+
+                                  task = x.AddTask("Copying DRM executable...");
+                                  {
+                                      task.IsIndeterminate = true;
+
+                                      await Task.Run(() => File.Move(executableFile, ChangeExecutableFileName(executableFile), true));
+                                      await Task.Run(() => File.Copy(drmFile, executableFile, true));
+
+                                      task.IsIndeterminate = false;
+                                      task.Value           = 100;
+                                  }
+
+                                  // TODO: Handle games without a timed trial.
                               }
                           );
+    }
+
+    private static string ChangeExecutableFileName(string fileName)
+    {
+        var theName = Path.GetFileName(fileName);
+        theName = "Buy" + theName;
+        return Path.Combine(Path.GetDirectoryName(fileName)!, theName);
     }
 }
