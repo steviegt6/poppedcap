@@ -84,7 +84,8 @@ public readonly record struct PopCapGameProcess(PopCapGame Game, string FilePath
             var process = Process.Start(
                 new ProcessStartInfo
                 {
-                    FileName        = FilePath,
+                    FileName        = "cmd.exe",
+                    Arguments       = $"/c \"{FilePath}\"",
                     UseShellExecute = true,
                     Verb            = "runas", // TODO: Windows-only elevation.
                 }
