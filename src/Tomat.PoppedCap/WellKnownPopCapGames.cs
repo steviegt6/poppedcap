@@ -1,5 +1,7 @@
 namespace Tomat.PoppedCap;
 
+// TODO: I have not gone through each game and corrected their "real" names.
+
 /// <summary>
 ///     Defines a well-known collection of supported PopCap games.
 /// </summary>
@@ -16,8 +18,8 @@ public static class WellKnownPopCapGames
     private static readonly PopCapGame big_money                       = MakeGame("Big Money",                        ["bigmoney"]);
     private static readonly PopCapGame bonnies_bookstore               = MakeGame("Bonnie's Bookstore",               ["bonniesbookstore"]);
     private static readonly PopCapGame bookworm                        = MakeGame("Bookworm",                         ["bookworm"]);
-    private static readonly PopCapGame bookworm_adventures             = MakeGame("Bookworm Adventures",              ["bwa"],     "BWASetup");
-    private static readonly PopCapGame bookworm_adventures_volume_2    = MakeGame("Bookworm Adventures Volume 2",     ["bwavol2"], "BWAVol2Setup");
+    private static readonly PopCapGame bookworm_adventures             = MakeGame("Bookworm Adventures",              ["bwa"],     "BWASetup",     "BWA");
+    private static readonly PopCapGame bookworm_adventures_volume_2    = MakeGame("Bookworm Adventures Volume 2",     ["bwavol2"], "BWAVol2Setup", "BWAVol2");
     private static readonly PopCapGame chuzzle                         = MakeGame("Chuzzle",                          ["chuzzle"]);
     private static readonly PopCapGame dynomite                        = MakeGame("Dynomite",                         ["dynomite"]);
     private static readonly PopCapGame feeding_frenzy                  = MakeGame("Feeding Frenzy",                   ["feedingfrenzy"]);
@@ -32,7 +34,7 @@ public static class WellKnownPopCapGames
     private static readonly PopCapGame tip_top                         = MakeGame("Tip Top",                          ["tiptop"]);
     private static readonly PopCapGame typer_shark                     = MakeGame("Typer Shark",                      ["typershark"]);
     private static readonly PopCapGame vacation_quest_australia        = MakeGame("Vacation Quest: Australia",        ["vacationaustralia"], "VacationQuestAustraliaSetup_20120801");
-    private static readonly PopCapGame vacation_quest_hawaiian_islands = MakeGame("Vacation Quest: Hawaiian Islands", ["vacationhawaii"],    "VacationQuestHawaiiSetup");
+    private static readonly PopCapGame vacation_quest_hawaiian_islands = MakeGame("Vacation Quest: Hawaiian Islands", ["vacationhawaii"],    "VacationQuestHawaiiSetup", "VacationQuestHawaii");
     private static readonly PopCapGame venice                          = MakeGame("Venice",                           ["venice"]);
     private static readonly PopCapGame word_harmony                    = MakeGame("Word Harmony",                     ["wordharmony"]);
     private static readonly PopCapGame zuma                            = MakeGame("Zuma",                             ["zuma"]);
@@ -74,9 +76,11 @@ public static class WellKnownPopCapGames
         zumas_revenge,
     ];
 
-    private static PopCapGame MakeGame(string gameName, string[] aliases, string? setupName = null)
+    private static PopCapGame MakeGame(string gameName, string[] aliases, string? setupName = null, string? realName = null)
     {
-        return new PopCapGame(gameName, MakeGameUrl(setupName ?? InferSetupName(gameName)), aliases);
+        setupName ??= InferRealName(gameName) + "Setup";
+        realName  ??= InferRealName(gameName);
+        return new PopCapGame(gameName, MakeGameUrl(setupName), realName, aliases);
     }
 
     private static string MakeGameUrl(string setupName)
@@ -84,13 +88,13 @@ public static class WellKnownPopCapGames
         return $"https://static-www.ec.popcap.com/binaries/popcap_downloads/{setupName}.exe";
     }
 
-    private static string InferSetupName(string gameName)
+    private static string InferRealName(string gameName)
     {
         gameName = gameName.Replace(" ", "");
         gameName = gameName.Replace(":", "");
         gameName = gameName.Replace("!", "");
         gameName = gameName.Replace("'", "");
         gameName = gameName.Replace(".", "");
-        return gameName + "Setup";
+        return gameName;
     }
 }

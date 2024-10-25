@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -98,5 +99,69 @@ public readonly record struct PopCapGameProcess(PopCapGame Game, string FilePath
         {
             return false;
         }
+    }
+
+    public async Task WaitForGameLaunchAsync()
+    {
+        while (true)
+        {
+            var processes = Process.GetProcessesByName("popcapgame1");
+            if (processes.Length > 0)
+            {
+                break;
+            }
+
+            await Task.Delay(100);
+        }
+    }
+
+    public async Task KillGameProcessesAsync()
+    {
+        await TaskKill(Game.RealName + ".exe");
+        await TaskKill("popcapgame1.exe");
+    }
+
+    public bool TryGetDrmFile([NotNullWhen(returnValue: true)] out string? drmFile)
+    {
+        var programData = Environment.GetEnvironmentVariable("ProgramData")!;
+        var popCapGames = Path.Combine(programData, "PopCap Games");
+        var gameDir     = FindGameDir(popCapGames, Game);
+        if (gameDir is null)
+        {
+            drmFile = null;
+            return false;
+        }
+
+        // TODO: Maybe try harder?
+        drmFile = Path.Combine(gameDir, "popcapgame1.exe");
+        if (File.Exists(drmFile))
+        {
+            return true;
+        }
+
+        drmFile = null;
+        return false;
+    }
+
+    private static async Task TaskKill(string processName)
+    {
+        var process = Process.Start(
+            new ProcessStartInfo
+            {
+                FileName        = "taskkill",
+                Arguments       = $"/f /im {processName}",
+                UseShellExecute = true,
+                Verb            = "runas", // TODO: Windows-only elevation.
+            }
+        );
+        Debug.Assert(process is not null);
+        await process.WaitForExitAsync();
+    }
+
+    private static string? FindGameDir(string popCapGames, PopCapGame game)
+    {
+        // TODO: Figure out other ways to search for the directory.
+        var gameDir = Path.Combine(popCapGames, game.RealName);
+        return Directory.Exists(gameDir) ? gameDir : null;
     }
 }

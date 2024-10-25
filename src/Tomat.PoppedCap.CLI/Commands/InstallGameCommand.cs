@@ -38,53 +38,80 @@ public class InstallGameCommand : ICommand
 
     private static async Task InstallGame(PopCapGame game)
     {
-        var process = default(PopCapGameProcess?);
         await AnsiConsole.Progress()
                          .StartAsync(
                               async x =>
                               {
-                                  var task = x.AddTask($"Downloading {game.GameName}...");
-
-                                  process = await PopCapGameProcess.DownloadAsync(
-                                      game,
-                                      (receivedBytes, totalBytes) =>
-                                      {
-                                          task.Value = receivedBytes / (double)totalBytes * 100;
-
-                                          if (receivedBytes == totalBytes)
+                                  var process = default(PopCapGameProcess?);
+                                  var task    = x.AddTask($"Downloading {game.GameName}...");
+                                  {
+                                      process = await PopCapGameProcess.DownloadAsync(
+                                          game,
+                                          (receivedBytes, totalBytes) =>
                                           {
-                                              task.Description = $"Downloaded {game.GameName}";
+                                              task.Value = receivedBytes / (double)totalBytes * 100;
+
+                                              if (receivedBytes == totalBytes)
+                                              {
+                                                  task.Description = $"Downloaded {game.GameName}";
+                                              }
                                           }
+                                      );
+
+                                      if (process is null)
+                                      {
+                                          AnsiConsole.MarkupLine($"[red]Failed to download {game.GameName}, aborting...[/]");
+                                          return;
                                       }
-                                  );
+                                  }
+
+                                  task = x.AddTask($"Installing {game.GameName}...");
+                                  {
+                                      task.IsIndeterminate = true;
+
+                                      var installed = await process.Value.InstallAsync();
+                                      task.Description = installed
+                                          ? $"Installed {game.GameName}"
+                                          : $"[red]Failed to install {game.GameName}[/]";
+
+                                      if (!installed)
+                                      {
+                                          AnsiConsole.MarkupLine($"[red]Failed to install {game.GameName}, aborting...[/]");
+                                          return;
+                                      }
+
+                                      task.IsIndeterminate = false;
+                                      task.Value           = 100;
+                                  }
+
+                                  task = x.AddTask("Waiting for user to start game...");
+                                  {
+                                      task.IsIndeterminate = true;
+
+                                      await process.Value.WaitForGameLaunchAsync();
+
+                                      task.IsIndeterminate = false;
+                                      task.Value           = 100;
+                                  }
+
+                                  task = x.AddTask("Killing processes...");
+                                  {
+                                      task.IsIndeterminate = true;
+
+                                      await process.Value.KillGameProcessesAsync();
+
+                                      task.IsIndeterminate = false;
+                                      task.Value           = 100;
+                                  }
+
+                                  if (!process.Value.TryGetDrmFile(out var drmFile))
+                                  {
+                                      AnsiConsole.MarkupLine($"[red]Failed to find DRM file for {game.GameName}, aborting...[/]");
+                                      return;
+                                  }
+
+                                  AnsiConsole.MarkupLine($"[grey]Found DRM executable: {drmFile}![/]");
                               }
                           );
-
-        if (process is null)
-        {
-            AnsiConsole.MarkupLine($"[red]Failed to download {game.GameName}, aborting...[/]");
-            return;
-        }
-
-        var installed = false;
-        await AnsiConsole.Progress()
-                         .StartAsync(
-                              async x =>
-                              {
-                                  var task = x.AddTask($"Installing {game.GameName}");
-                                  task.IsIndeterminate = true;
-
-                                  installed = await process.Value.InstallAsync();
-                                  task.Description = installed
-                                      ? $"Installed {game.GameName}"
-                                      : $"[red]Failed to install {game.GameName}[/]";
-                              }
-                          );
-
-        if (!installed)
-        {
-            AnsiConsole.MarkupLine($"[red]failed to install {game.GameName}, aborting...[/]");
-            return;
-        }
     }
 }
