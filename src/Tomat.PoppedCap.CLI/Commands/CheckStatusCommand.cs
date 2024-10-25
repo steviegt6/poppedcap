@@ -61,7 +61,7 @@ public class CheckStatusCommand : ICommand
                                           Task.Run(
                                               async () =>
                                               {
-                                                  var (success, status) = await CheckGameStatus(game);
+                                                  var (success, status) = await NetHelpers.GetGameStatusAsync(game);
                                                   task.IsIndeterminate  = false;
                                                   task.Value            = 100;
                                                   task.Description      = GetDescription(game.GameName, (success, (int)status));
@@ -73,15 +73,6 @@ public class CheckStatusCommand : ICommand
                                   await Task.WhenAll(tasks);
                               }
                           );
-    }
-
-    private static async Task<(bool success, HttpStatusCode status)> CheckGameStatus(PopCapGame game)
-    {
-        // TODO: Move HttpClient out... general utilities...
-        var client   = new HttpClient();
-        var request  = new HttpRequestMessage(HttpMethod.Head, game.GameUrl);
-        var response = await client.SendAsync(request);
-        return (response.IsSuccessStatusCode, response.StatusCode);
     }
 
     private static string GetDescription(string gameName, (bool success, int status)? result)
