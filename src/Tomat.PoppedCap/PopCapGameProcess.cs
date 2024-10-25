@@ -81,7 +81,15 @@ public readonly record struct PopCapGameProcess(PopCapGame Game, string FilePath
     {
         try
         {
-            var process = Process.Start(FilePath);
+            var process = Process.Start(
+                new ProcessStartInfo
+                {
+                    FileName        = FilePath,
+                    UseShellExecute = true,
+                    Verb            = "runas", // TODO: Windows-only elevation.
+                }
+            );
+            Debug.Assert(process is not null);
             await process.WaitForExitAsync();
             return process.ExitCode == 0;
         }
