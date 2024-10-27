@@ -4,11 +4,11 @@
 
 I haven't extensively tested this tool. I have confirmed it performs the steps fine for Plants vs. Zombies but no other games (they should work in theory but may require hardcoding some paths/names).
 
-I also haven't confirmed that this removes the stage lock for the PvZ demo (or whether it's even included in this version). If it doesn't, it should be an easy fix.
+I also haven't confirmed that this removes the stage lock for the PvZ demo (or whether it's even included in this version). If it doesn't [properly remove the stage lock], it should be an easy fix.
 
 ## why?
 
-There are a lot of no-longer accessible games/versions here with no way to legally purchase them.
+There are a lot of no-longer-accessible games/versions here with no way to legally purchase them.
 
 ## instructions
 
